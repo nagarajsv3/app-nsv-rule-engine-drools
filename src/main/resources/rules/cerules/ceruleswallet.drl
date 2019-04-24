@@ -1,0 +1,21 @@
+import com.nsv.jsmbaba.domain.Customer
+import com.nsv.jsmbaba.domain.MatchedRule
+import java.util.List
+import java.util.ArrayList;
+
+rule "ce wallet score eq 2 rule"
+when    customer : Customer(deviceScore == 1)
+then    List<MatchedRule> ruleList = customer.getRuleList();
+        MatchedRule frauddevicerule = new MatchedRule();
+        frauddevicerule.setOutcome("Y");
+        frauddevicerule.setReasonCode("R1111");
+        frauddevicerule.setReasonDescription("Wallet Score EQ 2.You stole Bezoz Wallet.");
+
+        if (ruleList != null) {
+           ruleList.add(frauddevicerule);
+        }else{
+           ruleList = new ArrayList<>();
+           ruleList.add(frauddevicerule);
+        }
+        customer.setRuleList(ruleList);
+end

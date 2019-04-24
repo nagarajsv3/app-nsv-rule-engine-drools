@@ -1,0 +1,39 @@
+import com.nsv.jsmbaba.domain.Customer
+import com.nsv.jsmbaba.domain.MatchedRule
+import java.util.List
+import java.util.ArrayList;
+
+rule "ce closed status rule"
+when    customer : Customer(status == "closed")
+then    List<MatchedRule> ruleList = customer.getRuleList();
+        MatchedRule closedrule = new MatchedRule();
+        closedrule.setOutcome("R");
+        closedrule.setReasonCode("R4444");
+        closedrule.setReasonDescription("Customer status is Closed!!! He is no more...lol");
+
+        if (ruleList != null) {
+           ruleList.add(closedrule);
+        }else{
+           ruleList = new ArrayList<>();
+           ruleList.add(closedrule);
+        }
+
+        customer.setRuleList(ruleList);
+end
+
+rule "ce device score eq 1 rule"
+when    customer : Customer(deviceScore == 1)
+then    List<MatchedRule> ruleList = customer.getRuleList();
+        MatchedRule frauddevicerule = new MatchedRule();
+        frauddevicerule.setOutcome("Y");
+        frauddevicerule.setReasonCode("R3333");
+        frauddevicerule.setReasonDescription("Device Score EQ 1. Bought it in China Market!!!Frauddy");
+
+        if (ruleList != null) {
+           ruleList.add(frauddevicerule);
+        }else{
+           ruleList = new ArrayList<>();
+           ruleList.add(frauddevicerule);
+        }
+        customer.setRuleList(ruleList);
+end
